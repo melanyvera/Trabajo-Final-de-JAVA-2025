@@ -1,0 +1,58 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+public class menuOpciones {
+
+    // MÉTODO PARA GUARDAR RESULTADOS EN CSV/TXT
+    public static void guardarResultados(String[][] datos, String palabraClave, int columna, String nombreArchivo) {
+
+        try (PrintWriter pw = new PrintWriter(new FileWriter(nombreArchivo))) {
+
+            // Encabezado del archivo
+            pw.println("Localidad,Tipo de evento,Organizador,Nombre de contacto,Telefono");
+
+            boolean encontrado = false;
+
+            for (int fila = 1; fila < datos.length; fila++) {
+
+                if (normalizar(datos[fila][columna])
+                        .equalsIgnoreCase(normalizar(palabraClave))) {
+
+                    pw.println(
+                            datos[fila][0] + "," +
+                            datos[fila][1] + "," +
+                            datos[fila][2] + "," +
+                            datos[fila][3] + "," +
+                            datos[fila][4]
+                    );
+
+                    encontrado = true;
+                }
+            }
+
+            if (encontrado) {
+                System.out.println("Resultados guardados en el archivo: " + nombreArchivo);
+            } else {
+                System.out.println("No hubo resultados para guardar.");
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error al guardar el archivo.");
+        }
+    }
+
+    // ESTE MÉTODO YA EXISTE EN TU CÓDIGO
+    public static String normalizar(String texto) {
+        texto = texto.toLowerCase().trim();
+        texto = texto.replace("\"", "");
+        texto = texto.replace("á", "a")
+                     .replace("é", "e")
+                     .replace("í", "i")
+                     .replace("ó", "o")
+                     .replace("ú", "u")
+                     .replace("ü", "u")
+                     .replace("ñ", "n");
+        return texto;
+    }
+}
